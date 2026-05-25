@@ -23,30 +23,30 @@
     <style>
       body {
         font-family: 'Zen Maru Gothic', sans-serif;
+        background-color: #fffaf0; /* Floral White - warm cream */
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(28,100%,95%,1) 0, transparent 50%), 
+          radial-gradient(at 50% 0%, hsla(34,100%,97%,1) 0, transparent 50%), 
+          radial-gradient(at 100% 0%, hsla(22,100%,94%,1) 0, transparent 50%);
+        min-height: 100vh;
       }
-      /* Adding a fade-in animation */
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
       }
-      .animate-fade-in {
-        animation: fadeIn 0.5s ease-in-out forwards;
+      ::-webkit-scrollbar-track {
+        background: transparent;
       }
-    </style>
-
-<link rel="stylesheet" href="/index.css">
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.1.0/",
-    "react": "https://esm.sh/react@^19.1.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.1.0/"
-  }
-}
-</script>
-  <script type="module" crossorigin src="/talk-variety-app/assets/index-BI6W60u0.js"></script>
+      ::-webkit-scrollbar-thumb {
+        background: #f3e8d2;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #e9dcb3;
+      }
+    </style>  <script type="module" crossorigin src="/talk-variety-app/assets/index-CtNp_Zn8.js"></script>
 </head>
-  <body class="bg-orange-50 text-stone-700 font-medium">
+  <body class="text-stone-700 font-medium">
     <div id="root"></div>
 </body>
 </html>
