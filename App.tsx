@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Quiz, MoshimoTopic, ThemeTopic, ProfileTopic } from './types';
 import Header from './components/Header';
 import CopyButton from './components/CopyButton';
 import TopicSelectorModal from './components/TopicSelectorModal';
+import LoadingSpinner from './components/LoadingSpinner';
+import ErrorDisplay from './components/ErrorDisplay';
 import { parseRuby, stripRuby } from './utils';
 
+// --- DATA LISTS ---
 const quizList: Quiz[] = [
   { theme: "究極《きゅうきょく》の食事《しょくじ》対決《たいけつ》", optionA: "一生《いっしょう》カレーしか食《た》べられない", optionB: "一生《いっしょう》ラーメンしか食《た》べられない" },
   { theme: "一生《いっしょう》のおやつ禁止令《きんしれい》", optionA: "一生《いっしょう》チョコ禁止《きんし》", optionB: "一生《いっしょう》ポテト禁止《きんし》" },
@@ -30,7 +33,7 @@ const quizList: Quiz[] = [
   { theme: "天候《てんこう》操作《そうさ》", optionA: "雨《あめ》は降《ふ》らないが、気温《きおん》は35℃以上《いじょう》になる", optionB: "毎日《まいにち》雪《ゆき》が降《ふ》るが、寒《さむ》さを感《かん》じない体《からだ》になる" },
   { theme: "夢《ゆめ》の1日《にち》", optionA: "一日《いちにち》だけ世界《せかい》最大《さいだい》級《きゅう》のテーマパークを貸《か》し切《き》りで遊《あそ》べる", optionB: "一日《いちにち》だけ完全《かんぜん》な無人島《むじんとう》を自由《じゆう》に探検《たんけん》できる" },
   { theme: "有名《ゆうめい》になるなら", optionA: "テレビに出《で》る", optionB: "YouTuberになる" },
-  { theme: "物語《ものがたり》の世界《せかい》へ", optionA: "ゲームの世界《せかい》に入《はい》って冒険《ぼうけん》する", optionB: "絵本《えほん》の中《なか》に入《はい》して探検《たんけん》する" },
+  { theme: "物語《ものがたり》の世界《せかい》へ", optionA: "ゲームの世界《せかい》に入《はい》って冒険《ぼう険》する", optionB: "絵本《えほん》の中《なか》に入《はい》して探検《たんけん》する" },
   { theme: "毎日《まいにち》の絶景《ぜっけい》", optionA: "毎日《まいにち》花火《はなび》が見《み》られる", optionB: "毎日《まいにち》流《なが》れ星《ぼし》が見《み》られる" },
   { theme: "最強《さいきょう》の体《からだ》", optionA: "絶対《ぜったい》に風邪《かぜ》をひかない体《からだ》", optionB: "絶対《ぜったい》にケガをしない体《からだ》" },
   { theme: "ふしぎな家《いえ》", optionA: "冷蔵庫《れいぞうこ》の中《なか》が魔法《まほう》の世界《せかい》", optionB: "クローゼットの中《なか》が異世界《いせかい》につながってる" },
@@ -44,7 +47,7 @@ const quizList: Quiz[] = [
   { theme: "空《そら》飛《と》ぶ道具《どうぐ》", optionA: "魔法《まほう》のホウキで空《そら》を飛《と》ぶ", optionB: "魔法《まほう》のじゅうたんで旅《たび》する" },
   { theme: "最高《さいこう》の相棒《あいぼう》", optionA: "ロボットの友《とも》だちができる", optionB: "モンスターのペットが飼《か》える" },
   { theme: "究極《きゅうきょく》のアイテム", optionA: "世界中《せかいじゅう》どこでも行《い》ける地図《ちず》を手《て》に入《い》れる", optionB: "世界中《せかいじゅう》のことがわかる図鑑《ずかん》を手《て》に入《い》れる" },
-  { theme: "声《こえ》の才能《さいのう》", optionA: "自分《じぶん》の声《こえ》が歌手《かしゅ》みたいに美《うつく》しくなる", optionB: "自分《じぶん》の話《はなし》がすごく面白《おもしろ》くなる" },
+  { theme: "声《こえ》の才能《さいのう》", optionA: "自分《じぶん》の声《こえ》が歌手《かしゅ》みたいに美《うつく》しくなる", optionB: "自分《じぶん》の話《はなし》がすごく面白《おモ》しろくなる" },
   { theme: "毎日《まいにち》のイベント", optionA: "毎日《まいにち》どこかで誕生日《たんじょうび》パーティーが開《ひら》かれる", optionB: "毎日《まいにち》どこかで花火《はなび》が上《あ》がる" },
   { theme: "未知《みち》との遭遇《そうぐう》", optionA: "おばけと話《はな》せるようになる", optionB: "宇宙人《うちゅうじん》と話《はな》せるようになる" },
   { theme: "記憶力《きおくりょく》", optionA: "見《み》たものを全部《ぜんぶ》記憶《きおく》できる目《め》", optionB: "聞《き》いたことを全部《ぜんぶ》覚《おぼ》えられる耳《み耳》" },
@@ -54,7 +57,7 @@ const quizList: Quiz[] = [
   { theme: "寝《ね》る前《まえ》の習慣《しゅうかん》", optionA: "ベッドに入《はい》ったら即《そく》寝《ね》る派《は》", optionB: "寝《ね》る前《まえ》に何《なに》かしら見《み》る派《は》" },
   { theme: "新《あたら》しい物《もの》の扱《あつか》い", optionA: "手《て》に人《い》れたらすぐ使《つか》う派《は》", optionB: "もったいなくてしばらく温存《おんぞん》する派《は》" },
   { theme: "予定《よてい》の立《た》て方《かた》", optionA: "細《こま》かく計画《けいかく》を決《き》める派《は》", optionB: "その場《ば》のノリで動《うご》く派《は》" },
-  { theme: "買《か》い物《もの》の決断《けつだん》", optionA: "これ！と決《き》めたら即決《そっけつ》派《は》", optionB: "いいなと思《おも》ってもめちゃくちゃ悩《なや》む派《は》" },
+  { theme: "買《か》い物《もの》の決断《けつだん》", optionA: "これ！と決《き》めたら即決《そっけつ》派《は》", optionB: "いいなと思《おモ》ってもめちゃくちゃ悩《なや》む派《は》" },
   { theme: "わからない時《とき》は", optionA: "すぐスマホなどで検索《けんさく》する", optionB: "まず自分《じぶん》でじっくり考《かんが》える" },
   { theme: "人生《じんせい》の選択《せんたく》", optionA: "失敗《しっぱい》しなさそうな安全《あんぜん》な道《みち》", optionB: "成功《せいこう》したら大《おお》きい挑戦《ちょうせん》の道《みち》" },
   { theme: "行動《こうどう》の基準《きじゅん》", optionA: "準備《じゅんび》を万全《ばんぜん》にしてから動《うご》く", optionB: "まずやってみてから考《かんが》える" },
@@ -129,12 +132,12 @@ const themeTopicList: ThemeTopic[] = [
   { title: "自分《じぶん》の直《なお》したい「ついついやってしまう癖《くせ》」はある？" },
   { title: "尊敬《そんけい》している人《ひと》は誰《だれ》？どんなところが素敵《すてき》？" },
   { title: "もし明日《あした》世界《せかい》が終《お》わるとしたら、最後《さいご》に何《なに》を食《た》べる？" },
-  { title: "得意《とくい》な料理《りょうり》、または作《つく》ってみたい料理《りょうり》は何《なに》？" },
+  { title: "得意《tくい》な料理《りょうり》、または作《つく》してみたい料理《りょうり》は何《なに》？" },
   { title: "今《いま》までで一番《いちばん》「冒険《ぼうけん》したな！」と思《おも》う出来事《できごと》は？" },
   { title: "タイムトラベルできるなら、過去《かこ》と未来《みらい》どっちに行《い》きたい？" },
-  { title: "自分《じぶん》の性格《せいかく》を一言《ひとこと》で表《あらわ》すと何《なに》？" },
+  { title: "自分《じぶん》の性格《せいかつ》を一言《ひとこと》で表《あらわ》すと何《なに》？" },
   { title: "あなたにとっての「一生《いっしょう》の宝物《たからもの》」を教《おし》えて！" },
-  { title: "ストレスが溜《た》まったとき、どうやって解消《かいしょう》している？" },
+  { title: "ストレスが溜《た》まったとき、どうやって解消《かい解消》している？" },
   { title: "理想《りそう》の休日《きゅうじつ》は、どんなスケジュールで過《す》ごしたい？" },
   { title: "歴史《れきし》上《じょう》の人物《じんぶつ》に一人《ひとり》会《あ》えるなら誰《だれ》に会《あ》いたい？" },
   { title: "人生《じんせい》で一番《いちばん》驚《おどろ》いたニュースや出来事《できごと》は何《なに》？" },
@@ -166,51 +169,6 @@ const themeTopicList: ThemeTopic[] = [
   { title: "人生《じんせい》において一番《いちばん》大切《たいせつ》にしている価値《かち》観《かん》は何《なに》？" },
 ];
 
-const profileTopicList: ProfileTopic[] = [
-    { title: "好《す》きなのはどっち？", options: ["🍎 フルーツ派《は》", "🍫 スイーツ派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "飲《の》みたいのは？", options: ["🧃ジュース", "☕お茶《ちゃ》", "🥛牛乳《ぎゅうにゅう》", "自由《じゆう》に答《こた》える"] },
-    { title: "食《た》べたいのは？", options: ["🍣すし", "🍜ラーメン", "🍛カレー", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きな色《いろ》は？", options: ["💙青《あお》系《けい》", "💚緑《みどり》系《けい》", "❤️赤《あか》系《けい》", "自由《じゆう》に答《こた》える"] },
-    { title: "動物《どうぶつ》を飼《か》うなら？", options: ["🐶いぬ", "🐱ねこ", "🐰うさぎ", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きな季節《きせつ》は？", options: ["🌸春《はる》", "☀️夏《なつ》", "🍂秋《あき》", "❄️冬《ふゆ》", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きな天気《てんき》は？", options: ["☀️はれ", "🌧️あめ", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きなお菓子《かし》は？", options: ["🍪クッキー", "🍬キャンディー", "🍫チョコ", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きな遊《あそ》びは？", options: ["🎮ゲーム", "🎨絵《え》をかく", "🏃体《からだ》を動《うご》かす", "自由《じゆう》に答《こた》える"] },
-    { title: "朝《あさ》ごはんは？", options: ["🍞パン派《は》", "🍚ごはん派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "部屋《へや》の明《あ》かりは？", options: ["💡明《あか》るめ派《は》", "🌙暗《くら》め派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "一人《ひとり》の時間《じかん》は？", options: ["🎵好《す》き", "🤝だれかといたい", "自由《じゆう》に答《こた》える"] },
-    { title: "週末《しゅうまつ》は？", options: ["🏠家《いえ》でゆっくり", "🚗おでかけしたい", "自由《じゆう》に答《こた》える"] },
-    { title: "魔法《まほう》が使《つか》えるなら？", options: ["✨空《そら》を飛《と》ぶ", "💫透明《とうめい》になる", "⏰時間《じかん》を止《と》める", "自由《じゆう》に答《こた》える"] },
-    { title: "タイムマシンで行《い》くなら？", options: ["⏳過去《かこ》", "🚀未来《みらい》", "自由《じゆう》に答《こた》える"] },
-    { title: "動物《どうぶつ》と話《はな》せたら？", options: ["🦁どうぶつ園《えん》に行《い》く", "🐦ペットと話《はな》す", "自由《じゆう》に答《こた》える"] },
-    { title: "無人島《むじんとう》に持《も》っていくなら？", options: ["📱スマホ", "🍞食《た》べ物《もの》", "🧸ぬいぐるみ", "自由《じゆう》に答《こた》える"] },
-    { title: "スーパーヒーローになるなら？", options: ["🦸助《たす》ける派《は》", "🦹冒険《ぼう険》する派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "世界《せかい》一周《いっしゅう》できるなら？", options: ["✈️海《うみ》のある国《くに》", "🏔山《やま》のある国《くに》", "自由《じゆう》に答《こた》える"] },
-    { title: "ロボットがいたら？", options: ["🧹家事《かじ》をしてもらう", "🎮一緒《いっしょ》に遊《あそ》ぶ", "自由《じゆう》に答《こた》える"] },
-    { title: "一日《いちにち》だけ動物《どうぶつ》になれるなら？", options: ["🐈ねこ", "🦅とり", "自由《じゆう》に答《こた》える"] },
-    { title: "雲《くも》に乗《の》れるなら？どこへ行《い》きたい？", options: ["山《やま》", "海《うみ》", "街《まち》", "自由《じゆう》に答《こた》える"] },
-    { title: "1億円《おくえん》もらえたら？", options: ["🎁貯金《ちょきん》する", "🛍使《つか》う", "💝分《わ》ける", "自由《じゆう》に答《こた》える"] },
-    { title: "朝《あさ》は？", options: ["🌅スッキリ起《お》きる派《は》", "😴ギリギリ派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "雨《あめ》の日《ひ》は？", options: ["☔家《いえ》でまったり", "🧥外《そと》に出《で》たい", "自由《じゆう》に答《こた》える"] },
-    { title: "うれしいときは？", options: ["😊話《はな》したくなる", "😌静《しず》かに感《かん》じたい", "自由《じゆう》に答《こた》える"] },
-    { title: "悲《かな》しいときは？", options: ["🗣話《はな》して楽《らく》にする", "🧸一人《ひとり》でゆっくりする", "自由《じゆう》に答《こた》える"] },
-    { title: "リラックスできるのは？", options: ["🎶音楽《おんがく》を聞《き》く", "📺テレビや動画《どうが》をみる", "😌ぼーっとする", "自由《じゆう》に答《こた》える"] },
-    { title: "嫌《きら》いなことがあっても？", options: ["😡言《い》う派《は》", "🤐がまんする派《は》", "自由《じゆう》に答《こた》える"] },
-    { title: "誰《だれ》かにほめられると？", options: ["😳照《て》れる", "😆うれしい！", "自由《じゆう》に答《こた》える"] },
-    { title: "びっくりしたときは？", options: ["😱声《こえ》を出《だ》す", "😶固《かた》まる", "自由《じゆう》に答《こた》える"] },
-    { title: "緊張《きんちょう》する場面《ばめん》では？", options: ["🧍じっとする", "💬話《はな》してごまかす", "自由《じゆう》に答《こた》える"] },
-    { title: "自分《じぶん》に近《ちか》いのは？", options: ["😄明《あか》るいタイプ", "🤫おだやかタイプ", "自由《じゆう》に答《こた》える"] },
-    { title: "自分《じぶん》を何《なに》かにたとえると？", options: ["🐢カメ", "🐰ウサギ", "🐱ネコ", "自由《じゆう》に答《こた》える"] },
-    { title: "一日《いちにち》だけ別《べつ》の仕事《しごと》をするなら？", options: ["👮警察官《けいさつかん》", "👩‍🍳シェフ", "🧙魔法《まほう》使《つか》い", "自由《じゆう》に答《こた》える"] },
-    { title: "おばけが出《で》たら？", options: ["👻逃《に》げる", "🗣話《はな》してみる", "自由《じゆう》に答《こた》える"] },
-    { title: "どこでもドアがあったら？", options: ["🏖海《うみ》", "🏰海外《かいがい》", "🏠家《いえ》の近《ちか》く", "自由《じゆう》に答《こた》える"] },
-    { title: "好《す》きな場所《ばしょ》は？", options: ["🌳自然《しぜん》の中《なか》", "🏙まちの中《なか》", "自由《じゆう》に答《こた》える"] },
-    { title: "宇宙《うちゅう》旅行《りょこう》するなら？", options: ["🌕月《つき》", "🪐火星《かせい》", "自由《じゆう》に答《こた》える"] },
-    { title: "スマホアプリを作《つく》れるなら？", options: ["🎮ゲーム", "📷カメラ", "🎶音楽《おんがく》", "自由《じゆう》に答《こた》える"] },
-    { title: "もし１日《にち》だけ透明《とうめい》人間《にんげん》になったら？", options: ["👀のぞく", "🧭探検《たんけん》する", "自由《じゆう》に答《こた》える"] },
-    { title: "一番《いちばん》なりたいのは？", options: ["🦸ヒーロー", "🧙魔法《まほう》使《つか》い", "🤖ロボット", "自由《じゆう》に答《こた》える"] },
-];
-
 const kimochiTopicList: ThemeTopic[] = [
   { title: "朝《あさ》起《お》きたときに「うれしい」と思《おも》うのはどんな日《ひ》？" },
   { title: "最近《さいきん》「ちょっとドキドキした」ことは？" },
@@ -229,7 +187,7 @@ const kimochiTopicList: ThemeTopic[] = [
   { title: "もし1日《にち》自由《じゆう》に使《つか》えるなら何《なに》したい？" },
   { title: "「お気《き》に入《い》りの場所《ばしょ》」ってどこ？" },
   { title: "「こういうとき笑《わら》っちゃう！」ってどんなとき？" },
-  { title: "「これができたらうれしい！」と思《おも》うことは？" },
+  { title: "「これができたらうれしい！」と思《おモ》うことは？" },
   { title: "「自分《じぶん》の中《なか》でキラッと光《ひか》るところ」はどんなところ？" },
   { title: "どんなときに「言《い》いにくいな」と思《おも》う？" },
   { title: "「わかってもらえない」と思《おも》ったときどうしてる？" },
@@ -245,7 +203,7 @@ const kimochiTopicList: ThemeTopic[] = [
   { title: "「少《すこ》し大人《おとな》になったな」と思《おも》うときは？" },
   { title: "まちがえたけど「学《まな》べたな」と思《おも》ったことある？" },
   { title: "できなかったことが「楽《たの》しく」なったことある？" },
-  { title: "どんなときに「自分《じぶん》をほめたい」と思《おも》う？" },
+  { title: "どんなときに「自分《じぶん》をほめたい」と思《おモ》う？" },
   { title: "これから「もう少《すこ》しがんばってみたいこと」は？" },
   { title: "1年前《ねんまえ》の自分《じぶん》に言《い》してあげたい言葉《ことば》は？" },
   { title: "これから「変《か》わってみたい」と思《おも》うところある？" },
@@ -257,14 +215,13 @@ const kimochiTopicList: ThemeTopic[] = [
   { title: "「助《たす》けてほしい」と言《い》いたいときどうしてる？" },
   { title: "「ありがとう」ってどんなときに言《い》いやすい？" },
   { title: "人《ひと》を笑顔《えがお》にしたいとき、どうする？" },
-  { title: "「自分《じぶん》の意見《いけん》を言《い》ってよかったな」と思《おも》ったことは？" },
+  { title: "「自分《じぶん》の意見《いけん》を言《い》してよかったな」と思《おも》ったことは？" },
   { title: "「やさしさ」ってどんなことだと思《おも》う？" },
   { title: "「ごめんね」を伝《つた》えるとき、どんな気持《きも》ちになる？" },
   { title: "誰《だれ》かに伝《つた》えたい「一言《ひとこと》メッセージ」はある？" },
 ];
 
 const yesNoTopicList: ThemeTopic[] = [
-  // 1. 食べ物・飲み物
   { title: "アイスクリームが好《す》き？" },
   { title: "チョコレートが好《す》き？" },
   { title: "辛《から》い食《た》べ物《もの》は好《す》き？" },
@@ -290,8 +247,6 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "アイスは少《すこ》し溶《と》けてから食《た》べる？" },
   { title: "からいものはけっこう平気《へいき》？" },
   { title: "甘《あま》い飲《の》み物《もの》よりお茶《ちゃ》のほうが好《す》き？" },
-
-  // 2. 趣味・エンタメ・技術
   { title: "ゲームが好《す》き？" },
   { title: "パズルゲームが好《す》き？" },
   { title: "スマホやタブレットはよく使《つか》う？" },
@@ -309,8 +264,6 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "イヤホンは片耳《かたみみ》だけで使《つか》うことがある？" },
   { title: "メモは紙《かみ》よりデジタル派《は》？" },
   { title: "同《おな》じ動画《どうが》を何回《なんかい》も見《み》ることがある？" },
-
-  // 3. 遊び・スポーツ
   { title: "外《そと》で遊《あそ》ぶのが好《す》き？" },
   { title: "公園《こうえん》に行《い》くのが好《す》き？" },
   { title: "室内《しつない》で遊《あそ》ぶほうが好《す》き？" },
@@ -319,13 +272,11 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "スポーツ観戦《かんせん》が好《す》き？" },
   { title: "走《はし》るのが好《す》き？" },
   { title: "音楽《おんがく》フェスに行《い》ってみたい？" },
-
-  // 4. 日常生活・習慣
   { title: "誕生日《たんじょうび》はワクワクする？" },
   { title: "朝《あさ》ごはんは毎日《まいにち》食《た》べる？" },
   { title: "早起《はやお》きが得意《とくい》？" },
   { title: "夜更《よふ》かしをすることがある？" },
-  { title: "朝《あさ》より夜《よる》のほうが元気《ぎんき》？" },
+  { title: "朝《あさ》より夜《よる》のほうが元気《げんき》？" },
   { title: "シャワーより湯船《ゆぶね》に入《はい》るほうが好《す》き？" },
   { title: "長風呂《ながぶろ》するタイプ？" },
   { title: "ペットを飼《か》っている？" },
@@ -352,9 +303,7 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "寝《ね》る前《まえ》に動画《どうが》を見《み》る？" },
   { title: "寝《ね》るときは真っ暗《まっくら》がいい？" },
   { title: "靴下《くつした》は右《みぎ》からはく？" },
-
-  // 5. 性格・考え方・コミュニケーション
-  { title: "新《あたら》しいことに挑戦《ちょうせん》するのは好《す》き？" },
+  { title: "新《あたら》しいこと挑戦《ちょうせん》するのは好《す》き？" },
   { title: "ちょっと慎重《しんちょう》なタイプ？" },
   { title: "緊張《きんちょう》しやすいほう？" },
   { title: "マイペースなほう？" },
@@ -386,8 +335,6 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "好《す》きなものは先《さき》に食《た》べる？" },
   { title: "新品《しんぴん》より少《すこ》し使《つか》いこんだ物《もの》のほうが好《す》き？" },
   { title: "にぎやかな場所《ばしょ》より静《しず》かな場所《ばしょ》が好《す》き？" },
-
-  // 6. 自然・場所・旅行
   { title: "動物《どうぶつ》が好《す》き？" },
   { title: "犬《いぬ》派《は》？" },
   { title: "猫《ねこ》派《は》？" },
@@ -421,45 +368,47 @@ const yesNoTopicList: ThemeTopic[] = [
 ];
 
 
-type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'profile' | 'kimochi' | 'yesno';
+type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'kimochi' | 'yesno';
 type Selection = 'A' | 'B' | null;
 
 const App: React.FC = () => {
   const [gameMode, setGameMode] = useState<GameMode>('menu');
   const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [showRuby, setShowRuby] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('showRuby');
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch (e) {
+      return true;
+    }
+  });
 
-  // Quiz Game State
+  useEffect(() => {
+    localStorage.setItem('showRuby', JSON.stringify(showRuby));
+  }, [showRuby]);
+
+  // Game States
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [selectedOption, setSelectedOption] = useState<Selection>(null);
-
-  // Moshimo Talk State
   const [moshimoTopic, setMoshimoTopic] = useState<MoshimoTopic | null>(null);
-  
-  // Theme Talk State
   const [themeTopic, setThemeTopic] = useState<ThemeTopic | null>(null);
-
-  // Profile Talk State
-  const [profileTopic, setProfileTopic] = useState<ProfileTopic | null>(null);
-  const [selectedProfileOption, setSelectedProfileOption] = useState<number | null>(null);
-
-  // Kimochi Talk State
   const [kimochiTopic, setKimochiTopic] = useState<ThemeTopic | null>(null);
-
-  // YesNo Talk State
   const [yesnoTopic, setYesnoTopic] = useState<ThemeTopic | null>(null);
   const [selectedYesNoOption, setSelectedYesNoOption] = useState<'YES' | 'NO' | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const resetAllState = () => {
     setQuiz(null);
     setSelectedOption(null);
     setMoshimoTopic(null);
     setThemeTopic(null);
-    setProfileTopic(null);
-    setSelectedProfileOption(null);
     setKimochiTopic(null);
     setYesnoTopic(null);
     setSelectedYesNoOption(null);
     setIsListModalOpen(false);
+    setError(null);
   };
 
   const getRandomItem = <T,>(list: T[]): T => {
@@ -468,33 +417,56 @@ const App: React.FC = () => {
   };
 
   const handleModeSelect = (mode: GameMode) => {
+    setIsLoading(true);
     resetAllState();
     setGameMode(mode);
-    if (mode === 'quiz') setQuiz(getRandomItem(quizList));
-    if (mode === 'moshimo') setMoshimoTopic(getRandomItem(moshimoTopicList));
-    if (mode === 'theme') setThemeTopic(getRandomItem(themeTopicList));
-    if (mode === 'profile') setProfileTopic(getRandomItem(profileTopicList));
-    if (mode === 'kimochi') setKimochiTopic(getRandomItem(kimochiTopicList));
-    if (mode === 'yesno') setYesnoTopic(getRandomItem(yesNoTopicList));
+    
+    setTimeout(() => {
+      const list = getListForMode(mode);
+      if (list) {
+        const item = getRandomItem(list as any[]);
+        setTopicForMode(mode, item);
+      }
+      setIsLoading(false);
+    }, 400);
+  };
+
+  const getListForMode = (mode: GameMode) => {
+    switch(mode) {
+      case 'quiz': return quizList;
+      case 'moshimo': return moshimoTopicList;
+      case 'theme': return themeTopicList;
+      case 'kimochi': return kimochiTopicList;
+      case 'yesno': return yesNoTopicList;
+      default: return null;
+    }
+  };
+
+  const setTopicForMode = (mode: GameMode, item: any) => {
+    if (mode === 'quiz') setQuiz(item);
+    if (mode === 'moshimo') setMoshimoTopic(item);
+    if (mode === 'theme') setThemeTopic(item);
+    if (mode === 'kimochi') setKimochiTopic(item);
+    if (mode === 'yesno') setYesnoTopic(item);
   };
 
   const handleNext = () => {
-    resetAllState();
-    if (gameMode === 'quiz') setQuiz(getRandomItem(quizList));
-    if (gameMode === 'moshimo') setMoshimoTopic(getRandomItem(moshimoTopicList));
-    if (gameMode === 'theme') setThemeTopic(getRandomItem(themeTopicList));
-    if (gameMode === 'profile') setProfileTopic(getRandomItem(profileTopicList));
-    if (gameMode === 'kimochi') setKimochiTopic(getRandomItem(kimochiTopicList));
-    if (gameMode === 'yesno') setYesnoTopic(getRandomItem(yesNoTopicList));
+    setIsLoading(true);
+    setSelectedOption(null);
+    setSelectedYesNoOption(null);
+
+    setTimeout(() => {
+      const list = getListForMode(gameMode);
+      if (list) {
+        const item = getRandomItem(list as any[]);
+        setTopicForMode(gameMode, item);
+      }
+      setIsLoading(false);
+    }, 300);
   };
 
   const handleManualSelect = (item: any) => {
-    if (gameMode === 'quiz') setQuiz(item);
-    if (gameMode === 'moshimo') setMoshimoTopic(item);
-    if (gameMode === 'theme') setThemeTopic(item);
-    if (gameMode === 'profile') setProfileTopic(item);
-    if (gameMode === 'kimochi') setKimochiTopic(item);
-    if (gameMode === 'yesno') setYesnoTopic(item);
+    setTopicForMode(gameMode, item);
   };
 
   const handleBackToMenu = () => {
@@ -502,59 +474,56 @@ const App: React.FC = () => {
     setGameMode('menu');
   };
 
+  const menuItems = [
+    { mode: 'quiz', icon: "🅰️", title: "究極《きゅうきょく》の二択《にたく》", desc: "一生《いっしょう》に一《いち》度《ど》の決断《けつだん》？！", color: "rose", bg: "bg-rose-50/50", border: "border-rose-100", text: "text-rose-500", iconBg: "bg-rose-50" },
+    { mode: 'moshimo', icon: "💭", title: "もしもトーク", desc: "想像《そうぞう》力《りょく》を全開《ぜんかい》に！", color: "amber", bg: "bg-amber-50/50", border: "border-amber-100", text: "text-amber-500", iconBg: "bg-amber-50" },
+    { mode: 'theme', icon: "🗣️", title: "テーマトーク", desc: "みんなでワイワイ話《はな》そう！", color: "orange", bg: "bg-orange-50/50", border: "border-orange-100", text: "text-orange-500", iconBg: "bg-orange-50" },
+    { mode: 'kimochi', icon: "💚", title: "今《いま》のきもち", desc: "心《こころ》の声《こえ》を聴《き》いてみよう", color: "emerald", bg: "bg-emerald-50/50", border: "border-emerald-100", text: "text-emerald-500", iconBg: "bg-emerald-50" },
+    { mode: 'yesno', icon: "🙆‍♀️", title: "YES / NO", desc: "迷《まよ》わず直感《ちょっかん》で答《こた》えよう！", color: "violet", bg: "bg-violet-50/50", border: "border-violet-100", text: "text-violet-500", iconBg: "bg-violet-50" },
+  ];
+
   const renderMenu = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto px-4">
-      <button onClick={() => handleModeSelect('quiz')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-rose-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🅰️🅱️</div>
-        <h2 className="text-2xl font-bold text-rose-500">{parseRuby("究極《きゅうきょく》の二択《にたく》")}</h2>
-        <p className="text-stone-500 mt-2 text-sm">{parseRuby("どっちを選《えら》ぶ？究極《きゅうきょく》の選択《せんたく》！")}</p>
-      </button>
-
-      <button onClick={() => handleModeSelect('moshimo')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-amber-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">💭</div>
-        <h2 className="text-2xl font-bold text-amber-500">もしもトーク</h2>
-        <p className="text-stone-500 mt-2 text-sm">もしも〇〇だったらどうする？</p>
-      </button>
-
-      <button onClick={() => handleModeSelect('theme')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-orange-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🗣️</div>
-        <h2 className="text-2xl font-bold text-orange-500">テーマトーク</h2>
-        <p className="text-stone-500 mt-2 text-sm">{parseRuby("お題《だい》について話《はな》そう！")}</p>
-      </button>
-
-      <button onClick={() => handleModeSelect('profile')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-sky-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">📝</div>
-        <h2 className="text-2xl font-bold text-sky-500">{parseRuby("自分《じぶん》だったら？")}</h2>
-        <p className="text-stone-500 mt-2 text-sm">{parseRuby("自分《じぶん》ならどうするか答《こた》えよう！")}</p>
-      </button>
-
-      <button onClick={() => handleModeSelect('kimochi')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-emerald-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">💚</div>
-        <h2 className="text-2xl font-bold text-emerald-500">{parseRuby("今《いま》のきもち")}</h2>
-        <p className="text-stone-500 mt-2 text-sm">{parseRuby("自分《じぶん》の心《こころ》と向《む》き合《あ》ってみよう")}</p>
-      </button>
-
-      <button onClick={() => handleModeSelect('yesno')} className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border-b-8 border-violet-200 group">
-        <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🙆‍♀️🙅‍♂️</div>
-        <h2 className="text-2xl font-bold text-violet-500">YES / NO</h2>
-        <p className="text-stone-500 mt-2 text-sm">{parseRuby("直感《ちょっかん》で答《こた》えよう！")}</p>
-      </button>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto px-4 pb-10">
+      {menuItems.map((item) => (
+        <button
+          key={item.mode}
+          onClick={() => handleModeSelect(item.mode as GameMode)}
+          className={`group bg-white p-8 rounded-[2rem] border-2 ${item.border} hover:border-${item.color}-300 shadow-sm hover:shadow-xl hover:shadow-${item.color}-100/50 transition-all duration-300 text-left flex items-center gap-8 relative overflow-hidden active:scale-[0.98]`}
+        >
+          <div className={`absolute top-0 right-0 w-32 h-32 ${item.bg} rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700 opacity-60`} />
+          
+          <div className={`flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-[1.5rem] ${item.iconBg} text-4xl shadow-inner group-hover:scale-110 transition-transform relative z-10`}>
+            {item.icon}
+          </div>
+          
+          <div className="relative z-10">
+            <h2 className={`text-2xl font-black ${item.text} mb-2`}>
+              {parseRuby(item.title, showRuby)}
+            </h2>
+            <p className="text-stone-400 text-sm font-bold leading-relaxed">
+              {parseRuby(item.desc, showRuby)}
+            </p>
+          </div>
+        </button>
+      ))}
     </div>
   );
 
-  const renderControls = (colorClass: string) => (
-    <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+  const renderControls = (colorClass: string, shadowColor: string) => (
+    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
       <button 
         onClick={handleNext} 
-        className={`${colorClass} text-white py-4 px-12 rounded-full font-bold text-xl hover:opacity-90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1`}
+        className={`${colorClass} text-white py-5 px-14 rounded-full font-black text-xl shadow-lg ${shadowColor} hover:opacity-90 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md transition-all flex items-center gap-3`}
       >
-        {parseRuby("つぎのお題《だい》")}
+        <span>🔄</span>
+        {parseRuby("つぎのお題《だい》", showRuby)}
       </button>
       <button 
         onClick={() => setIsListModalOpen(true)} 
-        className="bg-white text-stone-600 py-4 px-10 rounded-full font-bold text-lg hover:bg-stone-50 transition-all shadow border border-stone-200"
+        className="bg-white text-stone-500 py-5 px-12 rounded-full font-black text-lg border-2 border-stone-100 hover:border-stone-200 hover:bg-stone-50 transition-all active:scale-95 flex items-center gap-3"
       >
-        {parseRuby("リストから選《えら》ぶ")}
+        <span>📋</span>
+        {parseRuby("リストから選《えら》ぶ", showRuby)}
       </button>
     </div>
   );
@@ -563,36 +532,37 @@ const App: React.FC = () => {
     if (!quiz) return null;
     const combinedQuizText = `${stripRuby(quiz.theme)}\n🅰️ ${stripRuby(quiz.optionA)}\n🅱️ ${stripRuby(quiz.optionB)}`;
     return (
-      <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-rose-100 mb-8">
-           <h2 className="text-2xl md:text-3xl font-bold text-stone-700 leading-relaxed mb-6">{parseRuby(quiz.theme)}</h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-xl border-4 border-rose-50 mb-10 relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-80 h-80 bg-rose-50 rounded-full -mr-40 -mt-40 opacity-30 pointer-events-none" />
+           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-tight mb-14 relative z-10">
+             {parseRuby(quiz.theme, showRuby)}
+           </h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
              <button 
                onClick={() => setSelectedOption('A')}
-               className={`p-6 rounded-2xl transition-all ${selectedOption === 'A' ? 'bg-rose-500 text-white scale-105 shadow-lg' : 'bg-rose-50 hover:bg-rose-100 text-stone-700'}`}
+               className={`group p-10 rounded-[2.5rem] border-4 transition-all duration-300 ${selectedOption === 'A' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl scale-[1.02]' : 'bg-rose-50/30 hover:bg-rose-50 text-stone-700 border-transparent hover:border-rose-100'}`}
              >
-               <div className="text-3xl mb-2">🅰️</div>
-               <div className="font-bold text-lg">{parseRuby(quiz.optionA)}</div>
+               <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🅰️</div>
+               <div className="font-black text-2xl leading-relaxed">{parseRuby(quiz.optionA, showRuby)}</div>
              </button>
              <button 
                onClick={() => setSelectedOption('B')}
-               className={`p-6 rounded-2xl transition-all ${selectedOption === 'B' ? 'bg-rose-500 text-white scale-105 shadow-lg' : 'bg-rose-50 hover:bg-rose-100 text-stone-700'}`}
+               className={`group p-10 rounded-[2.5rem] border-4 transition-all duration-300 ${selectedOption === 'B' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl scale-[1.02]' : 'bg-rose-50/30 hover:bg-rose-50 text-stone-700 border-transparent hover:border-rose-100'}`}
              >
-               <div className="text-3xl mb-2">🅱️</div>
-               <div className="font-bold text-lg">{parseRuby(quiz.optionB)}</div>
+               <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🅱️</div>
+               <div className="font-black text-2xl leading-relaxed">{parseRuby(quiz.optionB, showRuby)}</div>
              </button>
            </div>
-           <CopyButton textToCopy={combinedQuizText} />
+           <div className="flex justify-center mt-4">
+             <CopyButton textToCopy={combinedQuizText} />
+           </div>
         </div>
-        {renderControls('bg-rose-500')}
+        {renderControls('bg-rose-500', 'shadow-rose-200')}
         <TopicSelectorModal 
-          isOpen={isListModalOpen} 
-          onClose={() => setIsListModalOpen(false)}
-          title="お題《だい》を選《えら》ぶ"
-          items={quizList}
-          onSelect={handleManualSelect}
-          displayKey="theme"
-          colorClass="bg-rose-500"
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={quizList} onSelect={handleManualSelect}
+          displayKey="theme" colorClass="bg-rose-500" showRuby={showRuby}
         />
       </div>
     );
@@ -601,26 +571,24 @@ const App: React.FC = () => {
   const renderMoshimo = () => {
     if (!moshimoTopic) return null;
     return (
-      <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-amber-100 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-2 bg-amber-200"></div>
-          <span className="inline-block bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-bold mb-6">
-            {parseRuby(moshimoTopic.theme)}
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-amber-50 mb-10 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-amber-200 to-amber-400" />
+          <span className="inline-block bg-amber-50 text-amber-700 px-6 py-2 rounded-full text-lg font-black mb-10 border border-amber-100 shadow-sm">
+             ✨ {parseRuby(moshimoTopic.theme, showRuby)}
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold text-stone-700 leading-relaxed mb-8">
-            {parseRuby(moshimoTopic.title)}
+          <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14">
+            {parseRuby(moshimoTopic.title, showRuby)}
           </h2>
-          <CopyButton textToCopy={stripRuby(moshimoTopic.title)} />
+          <div className="flex justify-center">
+            <CopyButton textToCopy={stripRuby(moshimoTopic.title)} />
+          </div>
         </div>
-        {renderControls('bg-amber-500')}
+        {renderControls('bg-amber-500', 'shadow-amber-200')}
         <TopicSelectorModal 
-          isOpen={isListModalOpen} 
-          onClose={() => setIsListModalOpen(false)}
-          title="お題《だい》を選《えら》ぶ"
-          items={moshimoTopicList}
-          onSelect={handleManualSelect}
-          displayKey="title"
-          colorClass="bg-amber-500"
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={moshimoTopicList} onSelect={handleManualSelect}
+          displayKey="title" colorClass="bg-amber-500" showRuby={showRuby}
         />
       </div>
     );
@@ -629,63 +597,22 @@ const App: React.FC = () => {
   const renderTheme = () => {
     if (!themeTopic) return null;
     return (
-      <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-orange-100 mb-8 relative">
-           <div className="text-6xl text-orange-200 absolute -top-8 -left-4 transform -rotate-12">“</div>
-           <div className="text-6xl text-orange-200 absolute -bottom-8 -right-4 transform -rotate-12">”</div>
-           <h2 className="text-2xl md:text-4xl font-bold text-stone-700 leading-relaxed py-4 mb-4">
-             {parseRuby(themeTopic.title)}
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-orange-50 mb-10 relative group">
+           <div className="text-9xl text-orange-50 absolute -top-10 -left-4 transform -rotate-12 select-none font-black opacity-50 group-hover:rotate-0 transition-transform duration-700">“</div>
+           <div className="text-9xl text-orange-50 absolute -bottom-10 -right-4 transform rotate-[168deg] select-none font-black opacity-50 group-hover:rotate-180 transition-transform duration-700">”</div>
+           <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+             {parseRuby(themeTopic.title, showRuby)}
            </h2>
-           <CopyButton textToCopy={stripRuby(themeTopic.title)} />
-        </div>
-        {renderControls('bg-orange-500')}
-        <TopicSelectorModal 
-          isOpen={isListModalOpen} 
-          onClose={() => setIsListModalOpen(false)}
-          title="お題《だい》を選《えら》ぶ"
-          items={themeTopicList}
-          onSelect={handleManualSelect}
-          displayKey="title"
-          colorClass="bg-orange-500"
-        />
-      </div>
-    );
-  };
-
-  const renderProfile = () => {
-    if (!profileTopic) return null;
-    return (
-      <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-sky-100 mb-8">
-           <h2 className="text-2xl md:text-4xl font-bold text-stone-700 leading-relaxed mb-8">
-             {parseRuby(profileTopic.title)}
-           </h2>
-           <CopyButton textToCopy={stripRuby(profileTopic.title)} />
-           <div className="space-y-3 mt-8">
-             {profileTopic.options.map((option, index) => (
-               <button
-                 key={index}
-                 onClick={() => setSelectedProfileOption(index)}
-                 className={`w-full p-4 rounded-xl text-lg font-bold transition-all border-2 ${
-                   selectedProfileOption === index 
-                   ? 'bg-sky-500 text-white border-sky-500 scale-105 shadow-md' 
-                   : 'bg-white text-stone-600 border-sky-100 hover:border-sky-300 hover:bg-sky-50'
-                 }`}
-               >
-                 {parseRuby(option)}
-               </button>
-             ))}
+           <div className="flex justify-center relative z-10">
+             <CopyButton textToCopy={stripRuby(themeTopic.title)} />
            </div>
         </div>
-        {renderControls('bg-sky-500')}
+        {renderControls('bg-orange-500', 'shadow-orange-200')}
         <TopicSelectorModal 
-          isOpen={isListModalOpen} 
-          onClose={() => setIsListModalOpen(false)}
-          title="お題《だい》を選《えら》ぶ"
-          items={profileTopicList}
-          onSelect={handleManualSelect}
-          displayKey="title"
-          colorClass="bg-sky-500"
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={themeTopicList} onSelect={handleManualSelect}
+          displayKey="title" colorClass="bg-orange-500" showRuby={showRuby}
         />
       </div>
     );
@@ -694,23 +621,21 @@ const App: React.FC = () => {
   const renderKimochi = () => {
     if (!kimochiTopic) return null;
     return (
-      <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-emerald-100 mb-8 relative">
-           <div className="absolute top-4 right-4 text-4xl opacity-20">🌿</div>
-           <h2 className="text-2xl md:text-4xl font-bold text-stone-700 leading-relaxed py-4 mb-4">
-             {parseRuby(kimochiTopic.title)}
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-emerald-50 mb-10 relative group overflow-hidden">
+           <div className="absolute top-10 right-10 text-8xl opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-1000 pointer-events-none">🌿</div>
+           <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+             {parseRuby(kimochiTopic.title, showRuby)}
            </h2>
-           <CopyButton textToCopy={stripRuby(kimochiTopic.title)} />
+           <div className="flex justify-center relative z-10">
+             <CopyButton textToCopy={stripRuby(kimochiTopic.title)} />
+           </div>
         </div>
-        {renderControls('bg-emerald-500')}
+        {renderControls('bg-emerald-500', 'shadow-emerald-200')}
         <TopicSelectorModal 
-          isOpen={isListModalOpen} 
-          onClose={() => setIsListModalOpen(false)}
-          title="お題《だい》を選《えら》ぶ"
-          items={kimochiTopicList}
-          onSelect={handleManualSelect}
-          displayKey="title"
-          colorClass="bg-emerald-500"
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={kimochiTopicList} onSelect={handleManualSelect}
+          displayKey="title" colorClass="bg-emerald-500" showRuby={showRuby}
         />
       </div>
     );
@@ -719,73 +644,84 @@ const App: React.FC = () => {
   const renderYesNo = () => {
     if (!yesnoTopic) return null;
     return (
-        <div className="max-w-2xl mx-auto px-4 text-center animate-fade-in">
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border-4 border-violet-100 mb-8">
-                <h2 className="text-2xl md:text-4xl font-bold text-stone-700 leading-relaxed mb-8">{parseRuby(yesnoTopic.title)}</h2>
-                <CopyButton textToCopy={stripRuby(yesnoTopic.title)} />
+        <div className="max-w-4xl mx-auto px-4 text-center">
+            <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-violet-50 mb-10 relative overflow-hidden">
+                <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14">
+                  {parseRuby(yesnoTopic.title, showRuby)}
+                </h2>
+                <div className="flex justify-center gap-8 mb-12">
+                  <button 
+                    onClick={() => setSelectedYesNoOption('YES')}
+                    className={`w-40 py-12 rounded-[2.5rem] text-5xl font-black border-4 transition-all duration-300 hover:scale-105 active:scale-95 ${selectedYesNoOption === 'YES' ? 'bg-violet-500 text-white border-violet-200 shadow-2xl' : 'bg-white border-violet-50 text-violet-400 hover:border-violet-100 hover:bg-violet-50'}`}
+                  >
+                    YES
+                  </button>
+                  <button 
+                    onClick={() => setSelectedYesNoOption('NO')}
+                    className={`w-40 py-12 rounded-[2.5rem] text-5xl font-black border-4 transition-all duration-300 hover:scale-105 active:scale-95 ${selectedYesNoOption === 'NO' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl' : 'bg-white border-rose-50 text-rose-400 hover:border-rose-100 hover:bg-rose-50'}`}
+                  >
+                    NO
+                  </button>
+                </div>
+                <div className="flex justify-center">
+                  <CopyButton textToCopy={stripRuby(yesnoTopic.title)} />
+                </div>
             </div>
-            
-            <div className="grid grid-cols-2 gap-6 mb-8">
-                <button 
-                  onClick={() => setSelectedYesNoOption('YES')}
-                  className={`p-8 rounded-2xl text-3xl font-bold transition-all ${selectedYesNoOption === 'YES' ? 'bg-violet-500 text-white scale-105 shadow-lg' : 'bg-white text-violet-500 hover:bg-violet-50'}`}
-                >
-                  １YES
-                </button>
-                <button 
-                  onClick={() => setSelectedYesNoOption('NO')}
-                  className={`p-8 rounded-2xl text-3xl font-bold transition-all ${selectedYesNoOption === 'NO' ? 'bg-rose-500 text-white scale-105 shadow-lg' : 'bg-white text-rose-500 hover:bg-rose-50'}`}
-                >
-                  ２NO
-                </button>
-            </div>
-
-             {renderControls('bg-violet-500')}
+             {renderControls('bg-violet-500', 'shadow-violet-200')}
              <TopicSelectorModal 
-              isOpen={isListModalOpen} 
-              onClose={() => setIsListModalOpen(false)}
-              title="お題《だい》を選《えら》ぶ"
-              items={yesNoTopicList}
-              onSelect={handleManualSelect}
-              displayKey="title"
-              colorClass="bg-violet-500"
+              isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+              title="お題を選《えら》ぶ" items={yesNoTopicList} onSelect={handleManualSelect}
+              displayKey="title" colorClass="bg-violet-500" showRuby={showRuby}
             />
         </div>
     )
   }
 
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen pb-20 text-stone-800 relative">
       <Header 
         title={
           gameMode === 'menu' ? 'いろいろトーク' :
           gameMode === 'quiz' ? '究極《きゅうきょく》の二択《にたく》' :
           gameMode === 'moshimo' ? 'もしもトーク' :
           gameMode === 'theme' ? 'テーマトーク' :
-          gameMode === 'profile' ? '自分《じぶん》だったら？' :
           gameMode === 'kimochi' ? '今《いま》のきもち' :
           gameMode === 'yesno' ? 'YES / NO' : ''
         }
         mode={gameMode}
+        showRuby={showRuby}
+        onToggleRuby={() => setShowRuby(!showRuby)}
       />
-      
-      <main className="container mx-auto">
-        {gameMode === 'menu' && renderMenu()}
-        {gameMode === 'quiz' && renderQuiz()}
-        {gameMode === 'moshimo' && renderMoshimo()}
-        {gameMode === 'theme' && renderTheme()}
-        {gameMode === 'profile' && renderProfile()}
-        {gameMode === 'kimochi' && renderKimochi()}
-        {gameMode === 'yesno' && renderYesNo()}
+
+      <main className="container mx-auto px-4 relative z-10">
+          {error ? (
+            <ErrorDisplay message={error} onRetry={() => handleModeSelect(gameMode)} />
+          ) : isLoading ? (
+            <div className="flex items-center justify-center min-h-[40vh]">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <div key={gameMode} className="animate-in fade-in zoom-in duration-500">
+              {gameMode === 'menu' && renderMenu()}
+              {gameMode === 'quiz' && renderQuiz()}
+              {gameMode === 'moshimo' && renderMoshimo()}
+              {gameMode === 'theme' && renderTheme()}
+              {gameMode === 'kimochi' && renderKimochi()}
+              {gameMode === 'yesno' && renderYesNo()}
+            </div>
+          )}
       </main>
 
-      {gameMode !== 'menu' && (
-        <div className="text-center mt-12">
+      {gameMode !== 'menu' && !isLoading && !error && (
+        <div className="text-center mt-16 px-4">
           <button 
             onClick={handleBackToMenu}
-            className="text-stone-500 hover:text-stone-800 font-bold underline decoration-2 underline-offset-4 transition-colors"
+            className="group inline-flex items-center gap-2 text-orange-300 hover:text-orange-500 font-black text-xl transition-all active:scale-95"
           >
-            {parseRuby("メニューに戻《もど》る")}
+            <span className="group-hover:-translate-x-2 transition-transform">⬅️</span>
+            <span className="underline decoration-4 underline-offset-8 decoration-orange-100 group-hover:decoration-orange-200">
+              {parseRuby("メニューに戻《もど》る")}
+            </span>
           </button>
         </div>
       )}

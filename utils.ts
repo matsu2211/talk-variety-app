@@ -1,8 +1,10 @@
 import React from 'react';
 
 // Parses text like "漢字《かんじ》" into <ruby>漢字<rt>かんじ</rt></ruby> elements
-export const parseRuby = (text: string) => {
+export const parseRuby = (text: string, showRuby: boolean = true) => {
   if (!text) return null;
+  if (!showRuby) return stripRuby(text);
+  
   const regex = /([\u4e00-\u9faf\u3005-\u3007]+)《(.+?)》/g;
   const parts: (string | React.ReactNode)[] = [];
   let lastIndex = 0;

@@ -16,10 +16,5 @@ export interface ThemeTopic {
 
 export interface YesNoTopic {
   title: string;
-  genre: string;
-}
-
-export interface ProfileTopic {
-  title: string;
-  options: string[];
+  genre?: string;
 }

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 
 interface CopyButtonProps {
@@ -24,15 +23,15 @@ const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy }) => {
   return (
     <button
       onClick={handleCopy}
-      className={`font-bold py-3 px-6 rounded-full text-lg transition-all duration-200 ease-in-out hover:scale-105 ${
+      className={`text-base font-bold py-3 px-8 rounded-2xl border-2 transition-all duration-300 active:scale-95 flex items-center gap-2 ${
         isCopied
-          ? 'bg-green-500 text-white cursor-not-allowed'
-          : 'bg-gray-200 hover:bg-gray-300 text-stone-700'
+          ? 'bg-emerald-50 border-emerald-200 text-emerald-600 shadow-inner'
+          : 'bg-white border-orange-100 text-orange-400 hover:border-orange-200 hover:text-orange-500 hover:shadow-md'
       }`}
       disabled={isCopied}
-      aria-live="polite"
     >
-      {isCopied ? 'コピーしました！' : 'お題をコピー'}
+      <span>{isCopied ? '✅' : '📋'}</span>
+      <span>{isCopied ? 'コピーしました！' : 'お題をコピー'}</span>
     </button>
   );
 };
