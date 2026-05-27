@@ -367,8 +367,113 @@ const yesNoTopicList: ThemeTopic[] = [
   { title: "動画《どうが》は倍速《ばいそく》で見《み》ることがある？" }
 ];
 
+const saikinTopicList: ThemeTopic[] = [
+  // 食べ物・飲み物系
+  { title: "最近《さいきん》食《た》べたアイスは何《なに》？" },
+  { title: "最近《さいきん》飲《の》んだジュースは何《なに》？" },
+  { title: "最近《さいきん》ハマったお菓子《かし》は何《なに》？" },
+  { title: "最近《さいきん》食《た》べたコンビニ飯《めし》は何《なに》？" },
+  { title: "最近《さいきん》頼《たの》んだデリバリーは何《なに》？" },
+  { title: "最近《さいきん》食《た》べたパンは何《なに》？" },
+  { title: "最近《さいきん》食《た》べたラーメンは何《なに》？" },
+  { title: "最近《さいきん》飲《の》んだカフェメニューは何《なに》？" },
+  { title: "最近《さいきん》買《か》った冷凍《れいとう》食品《しょくひん》は何《なに》？" },
+  { title: "最近《さいきん》「これ当《あ》たり！」と思《おも》った食《た》べ物《もの》は？" },
+  { title: "最近《さいきん》失敗《しっぱい》した食《た》べ物《もの》はある？" },
+  { title: "最近《さいきん》食《た》べた給食《きゅうしょく》メニューは何《なに》？" },
+  { title: "最近《さいきん》食《た》べた期間限定《きかんげんてい》商品《しょうひん》は何《なに》？" },
+  { title: "最近《さいきん》食《た》べた辛《から》いものは何《なに》？" },
+  { title: "最近《さいきん》食《た》べたごほうび飯《めし》は何《なに》？" },
+  // 買い物系
+  { title: "最近《さいきん》買《か》った物《もの》は何《なに》？" },
+  { title: "最近《さいきん》ムダ遣《づか》いしたものは何《なに》？" },
+  { title: "最近《さいきん》100均《きん》で買《か》った物《もの》は何《なに》？" },
+  { title: "最近《さいきん》ネット注文《ちゅうもん》したものは何《なに》？" },
+  { title: "最近《さいきん》コンビニで買《か》った物《もの》は何《なに》？" },
+  { title: "最近《さいきん》「便利《べんり》！」と思《おも》ったものは何《なに》？" },
+  { title: "最近《さいきん》なくしたものはある？" },
+  { title: "最近《さいきん》ほしくなったものは何《なに》？" },
+  { title: "最近《さいきん》見《み》かけた変《へん》な商品《しょうひん》はある？" },
+  { title: "最近《さいきん》テンションが上《あ》がった買《か》い物《もの》は？" },
+  { title: "最近《さいきん》後悔《こうかい》した買《か》い物《もの》はある？" },
+  { title: "最近《さいきん》人《ひと》にすすめたいものは何《なに》？" },
+  { title: "最近《さいきん》パッケージで選《えら》んだものは何《なに》？" },
+  // 学校・仕事・日常系
+  { title: "最近《さいきん》びっくりしたことは何《なに》？" },
+  { title: "最近《さいきん》笑《わら》ったことは何《なに》？" },
+  { title: "最近《さいきん》やらかしたことはある？" },
+  { title: "最近《さいきん》眠《ねむ》かった瞬間《しゅんかん》はいつ？" },
+  { title: "最近《さいきん》急《いそ》いだことは何《なに》？" },
+  { title: "最近《さいきん》サボりたくなったことはある？" },
+  { title: "最近《さいきん》頑張《がんば》ったことは何《なに》？" },
+  { title: "最近《さいきん》焦《あせ》ったことは何《なに》？" },
+  { title: "最近《さいきん》うれしかったことは何《なに》？" },
+  { title: "最近《さいきん》「なんで？」と思《おも》ったことは何《なに》？" },
+  { title: "最近《さいきん》見《み》た夢《ゆめ》を教《おし》えて！" },
+  { title: "最近《さいきん》のマイ《まい》ルール《るーる》はある？" },
+  { title: "最近《さいきん》気《き》まずかった瞬間《しゅんかん》は？" },
+  { title: "最近《さいきん》聞《き》いたウワサ《うわさ》はある？" },
+  { title: "最近《さいきん》助《たす》かったことは何《なに》？" },
+  // エンタメ・趣味系
+  { title: "最近《さいきん》見《み》たYouTube《ゆーちゅーぶ》は何《なに》？" },
+  { title: "最近《さいきん》見《み》た映画《えいが》は何《なに》？" },
+  { title: "最近《さいきん》見《み》たアニメ《あにめ》は何《なに》？" },
+  { title: "最近《さいきん》聴《き》いた曲《きょく》は何《なに》？" },
+  { title: "最近《さいきん》頭《あたま》から離《はな》れない曲《きょく》はある？" },
+  { title: "最近《さいきん》やったゲーム《げーむ》は何《なに》？" },
+  { title: "最近《さいきん》見返《みかえ》した作品《さくひん》はある？" },
+  { title: "最近《さいきん》好《す》きになったキャラ《きゃら》は誰《だれ》？" },
+  { title: "最近《さいきん》ハマってることは何《なに》？" },
+  { title: "最近《さいきん》覚《おぼ》えた豆知識《まめちしき》を教《おし》えて！" },
+  { title: "最近《さいきん》スクショ《すくしょ》したものは何《なに》？" },
+  { title: "最近《さいきん》笑《わら》った動画《どうが》を教《おし》えて！" },
+  // 「答えやすくて盛り上がりやすい」鉄板系
+  { title: "最近《さいきん》一番《いちばん》笑《わら》ったことは何《なに》？" },
+  { title: "最近《さいきん》一番《いちばん》おいしかったものは何《なに》？" },
+  { title: "最近《さいきん》一番《いちばん》ショック《しょっく》だったことは何《なに》？" },
+  { title: "最近《さいきん》一番《いちばん》疲《つか》れた日《ひ》はいつ？" },
+  { title: "最近《さいきん》一番《いちばん》テンション《てんしょん》上《あ》がった瞬間《しゅんかん》は？" },
+  // 少し変化球のお題
+  { title: "最近《さいきん》つい写真《しゃしん》を撮《と》ったものは？" },
+  { title: "最近《さいきん》二度見《にどみ》したものはある？" },
+  { title: "最近《さいきん》無意識《むいしき》にやってたことはある？" },
+  { title: "最近《さいきん》つい買《か》っちゃうものは何《なに》？" },
+  { title: "最近《さいきん》気《き》になってる言葉《ことば》はある？" },
+  { title: "最近《さいきん》「時代《じだい》変《か》わったな」と思《おも》ったことは？" },
+  { title: "最近《さいきん》ちょっと怖《こわ》かったことはある？" },
+  { title: "最近《さいきん》地味《じみ》にうれしかったことは何《なに》？" },
+  { title: "最近《さいきん》「これ誰《だれ》が考《かんが》えた？」と思《おも》ったものは？" },
+  { title: "最近《さいきん》生活《せいかつ》を支配《しはい》しているものは何《なに》？" },
+  // 外出・移動系
+  { title: "最近《さいきん》行《い》ったお店《みせ》はどこ？" },
+  { title: "最近《さいきん》乗《の》った乗《の》り物《もの》は何《なに》？" },
+  { title: "最近《さいきん》道《みち》で見《み》かけたものはある？" },
+  { title: "最近《さいきん》寄《よ》り道《みち》した場所《ばしょ》はどこ？" },
+  { title: "最近《さいきん》迷《まよ》ったことはある？" },
+  { title: "最近《さいきん》急《いそ》いで走《はし》った理由《りゆう》は何《なに》？" },
+  { title: "最近《さいきん》歩《ある》きながら考《かんが》えてたことは何《なに》？" },
+  { title: "最近《さいきん》見《み》つけた穴場《あなば》はある？" },
+  { title: "最近《さいきん》信号《しんごう》待《ま》ちで思《おも》ったことは？" },
+  { title: "最近《さいきん》外《そと》で困《こま》ったことはある？" },
+  // 深掘りしやすい系
+  { title: "最近《さいきん》考《かんが》えさせられたことは何《なに》？" },
+  { title: "最近《さいきん》価値観《かちかん》変《か》わったことはある？" },
+  { title: "最近《さいきん》「大事《だいじ》だな」と思《おも》ったことは何《なに》？" },
+  { title: "最近《さいきん》挑戦《ちょうせん》したことは何《なに》？" },
+  { title: "最近《さいきん》誰《だれ》かに影響《えいきょう》されたことはある？" },
+  { title: "最近《さいきん》続《つづ》けていることは何《なに》？" },
+  { title: "最近《さいきん》やめたことはある？" },
+  { title: "最近《さいきん》成長《せいちょう》したと思《おも》うことは何《なに》？" },
+  { title: "最近《さいきん》気づいた自分《じぶん》の癖《くせ》はある？" },
+  { title: "最近《さいきん》ちょっと変《か》わったことは何《なに》？" },
+  { title: "最近《さいきん》の「あるある」を教《おし》えて！" },
+  { title: "最近《さいきん》の「小《ちい》さな幸《しあわ》せ」は何《なに》？" },
+  { title: "最近《さいきん》の「優勝《ゆうしょう》ごはん」は何《なに》？" },
+  { title: "最近《さいきん》やらかしたことはある？" },
+];
 
-type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'kimochi' | 'yesno';
+
+type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'kimochi' | 'yesno' | 'saikin' | 'profile';
 type Selection = 'A' | 'B' | null;
 
 const App: React.FC = () => {
@@ -394,6 +499,7 @@ const App: React.FC = () => {
   const [themeTopic, setThemeTopic] = useState<ThemeTopic | null>(null);
   const [kimochiTopic, setKimochiTopic] = useState<ThemeTopic | null>(null);
   const [yesnoTopic, setYesnoTopic] = useState<ThemeTopic | null>(null);
+  const [saikinTopic, setSaikinTopic] = useState<ThemeTopic | null>(null);
   const [selectedYesNoOption, setSelectedYesNoOption] = useState<'YES' | 'NO' | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -406,6 +512,7 @@ const App: React.FC = () => {
     setThemeTopic(null);
     setKimochiTopic(null);
     setYesnoTopic(null);
+    setSaikinTopic(null);
     setSelectedYesNoOption(null);
     setIsListModalOpen(false);
     setError(null);
@@ -438,6 +545,7 @@ const App: React.FC = () => {
       case 'theme': return themeTopicList;
       case 'kimochi': return kimochiTopicList;
       case 'yesno': return yesNoTopicList;
+      case 'saikin': return saikinTopicList;
       default: return null;
     }
   };
@@ -448,6 +556,7 @@ const App: React.FC = () => {
     if (mode === 'theme') setThemeTopic(item);
     if (mode === 'kimochi') setKimochiTopic(item);
     if (mode === 'yesno') setYesnoTopic(item);
+    if (mode === 'saikin') setSaikinTopic(item);
   };
 
   const handleNext = () => {
@@ -478,6 +587,7 @@ const App: React.FC = () => {
     { mode: 'quiz', icon: "🅰️", title: "究極《きゅうきょく》の二択《にたく》", desc: "一生《いっしょう》に一《いち》度《ど》の決断《けつだん》？！", color: "rose", bg: "bg-rose-50/50", border: "border-rose-100", text: "text-rose-500", iconBg: "bg-rose-50" },
     { mode: 'moshimo', icon: "💭", title: "もしもトーク", desc: "想像《そうぞう》力《りょく》を全開《ぜんかい》に！", color: "amber", bg: "bg-amber-50/50", border: "border-amber-100", text: "text-amber-500", iconBg: "bg-amber-50" },
     { mode: 'theme', icon: "🗣️", title: "テーマトーク", desc: "みんなでワイワイ話《はな》そう！", color: "orange", bg: "bg-orange-50/50", border: "border-orange-100", text: "text-orange-500", iconBg: "bg-orange-50" },
+    { mode: 'saikin', icon: "📰", title: "最近《さいきん》ニュース", desc: "身《み》の回《まわ》りの出来事《できごと》を話《はな》そう！", color: "blue", bg: "bg-blue-50/50", border: "border-blue-100", text: "text-blue-500", iconBg: "bg-blue-50" },
     { mode: 'kimochi', icon: "💚", title: "今《いま》のきもち", desc: "心《こころ》の声《こえ》を聴《き》いてみよう", color: "emerald", bg: "bg-emerald-50/50", border: "border-emerald-100", text: "text-emerald-500", iconBg: "bg-emerald-50" },
     { mode: 'yesno', icon: "🙆‍♀️", title: "YES / NO", desc: "迷《まよ》わず直感《ちょっかん》で答《こた》えよう！", color: "violet", bg: "bg-violet-50/50", border: "border-violet-100", text: "text-violet-500", iconBg: "bg-violet-50" },
   ];
@@ -535,7 +645,7 @@ const App: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-xl border-4 border-rose-50 mb-10 relative overflow-hidden">
            <div className="absolute top-0 right-0 w-80 h-80 bg-rose-50 rounded-full -mr-40 -mt-40 opacity-30 pointer-events-none" />
-           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-tight mb-14 relative z-10">
+           <h2 className="text-2xl md:text-4xl font-black text-stone-700 leading-tight mb-14 relative z-10">
              {parseRuby(quiz.theme, showRuby)}
            </h2>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
@@ -577,7 +687,7 @@ const App: React.FC = () => {
           <span className="inline-block bg-amber-50 text-amber-700 px-6 py-2 rounded-full text-lg font-black mb-10 border border-amber-100 shadow-sm">
              ✨ {parseRuby(moshimoTopic.theme, showRuby)}
           </span>
-          <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14">
+          <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14">
             {parseRuby(moshimoTopic.title, showRuby)}
           </h2>
           <div className="flex justify-center">
@@ -601,7 +711,7 @@ const App: React.FC = () => {
         <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-orange-50 mb-10 relative group">
            <div className="text-9xl text-orange-50 absolute -top-10 -left-4 transform -rotate-12 select-none font-black opacity-50 group-hover:rotate-0 transition-transform duration-700">“</div>
            <div className="text-9xl text-orange-50 absolute -bottom-10 -right-4 transform rotate-[168deg] select-none font-black opacity-50 group-hover:rotate-180 transition-transform duration-700">”</div>
-           <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
              {parseRuby(themeTopic.title, showRuby)}
            </h2>
            <div className="flex justify-center relative z-10">
@@ -618,13 +728,37 @@ const App: React.FC = () => {
     );
   };
 
+  const renderSaikin = () => {
+    if (!saikinTopic) return null;
+    return (
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-blue-50 mb-10 relative group">
+           <div className="text-9xl text-blue-50 absolute -top-10 -left-4 transform -rotate-12 select-none font-black opacity-50 group-hover:rotate-0 transition-transform duration-700">“</div>
+           <div className="text-9xl text-blue-50 absolute -bottom-10 -right-4 transform rotate-[168deg] select-none font-black opacity-50 group-hover:rotate-180 transition-transform duration-700">”</div>
+           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+             {parseRuby(saikinTopic.title, showRuby)}
+           </h2>
+           <div className="flex justify-center relative z-10">
+             <CopyButton textToCopy={stripRuby(saikinTopic.title)} />
+           </div>
+        </div>
+        {renderControls('bg-blue-500', 'shadow-blue-200')}
+        <TopicSelectorModal 
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={saikinTopicList} onSelect={handleManualSelect}
+          displayKey="title" colorClass="bg-blue-500" showRuby={showRuby}
+        />
+      </div>
+    );
+  };
+
   const renderKimochi = () => {
     if (!kimochiTopic) return null;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-emerald-50 mb-10 relative group overflow-hidden">
            <div className="absolute top-10 right-10 text-8xl opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-1000 pointer-events-none">🌿</div>
-           <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
              {parseRuby(kimochiTopic.title, showRuby)}
            </h2>
            <div className="flex justify-center relative z-10">
@@ -646,7 +780,7 @@ const App: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto px-4 text-center">
             <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-violet-50 mb-10 relative overflow-hidden">
-                <h2 className="text-4xl md:text-6xl font-black text-stone-700 leading-[1.4] mb-14">
+                <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14">
                   {parseRuby(yesnoTopic.title, showRuby)}
                 </h2>
                 <div className="flex justify-center gap-8 mb-12">
@@ -685,6 +819,7 @@ const App: React.FC = () => {
           gameMode === 'quiz' ? '究極《きゅうきょく》の二択《にたく》' :
           gameMode === 'moshimo' ? 'もしもトーク' :
           gameMode === 'theme' ? 'テーマトーク' :
+          gameMode === 'saikin' ? '最近《さいきん》ニュース' :
           gameMode === 'kimochi' ? '今《いま》のきもち' :
           gameMode === 'yesno' ? 'YES / NO' : ''
         }
@@ -706,6 +841,7 @@ const App: React.FC = () => {
               {gameMode === 'quiz' && renderQuiz()}
               {gameMode === 'moshimo' && renderMoshimo()}
               {gameMode === 'theme' && renderTheme()}
+              {gameMode === 'saikin' && renderSaikin()}
               {gameMode === 'kimochi' && renderKimochi()}
               {gameMode === 'yesno' && renderYesNo()}
             </div>

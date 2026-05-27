@@ -3,7 +3,7 @@ import { parseRuby } from '../utils';
 
 interface HeaderProps {
     title: string;
-    mode?: 'quiz' | 'moshimo' | 'theme' | 'menu' | 'profile' | 'kimochi' | 'yesno';
+    mode?: 'quiz' | 'moshimo' | 'theme' | 'menu' | 'profile' | 'kimochi' | 'yesno' | 'saikin';
     showRuby: boolean;
     onToggleRuby: () => void;
 }
@@ -14,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ title, mode = 'menu', showRuby, onToggl
       case 'quiz': return 'text-rose-500';
       case 'moshimo': return 'text-amber-500';
       case 'theme': return 'text-orange-500';
+      case 'saikin': return 'text-blue-500';
       case 'profile': return 'text-sky-500';
       case 'kimochi': return 'text-emerald-500';
       case 'yesno': return 'text-violet-500';
@@ -26,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({ title, mode = 'menu', showRuby, onToggl
       case 'quiz': return 'border-rose-100';
       case 'moshimo': return 'border-amber-100';
       case 'theme': return 'border-orange-100';
+      case 'saikin': return 'border-blue-100';
       case 'profile': return 'border-sky-100';
       case 'kimochi': return 'border-emerald-100';
       case 'yesno': return 'border-violet-100';
