@@ -472,8 +472,29 @@ const saikinTopicList: ThemeTopic[] = [
   { title: "最近《さいきん》やらかしたことはある？" },
 ];
 
+const teibanTopicList: ThemeTopic[] = [
+  { title: "おにぎりの具《ぐ》" },
+  { title: "ご飯《はん》のおとも" },
+  { title: "飲《の》み物《もの》" },
+  { title: "集中《しゅうちゅう》方法《ほうほう》" },
+  { title: "暇《ひま》つぶし" },
+  { title: "文房具《ぶんぼうぐ》" },
+  { title: "歯磨《はみが》き粉《こ》" },
+  { title: "シャンプー" },
+  { title: "リフレッシュ方法《ほうほう》" },
+  { title: "ポテチの味《あじ》" },
+  { title: "寿司《すし》ネタ" },
+  { title: "ラーメン" },
+  { title: "和風《わふう》" },
+  { title: "洋風《ようふう》" },
+  { title: "中華《ちゅうか》" },
+  { title: "お風呂《ふろ》の温度《おんど》" },
+  { title: "ファミレス" },
+  { title: "外食《がいしょく》チェーン店《てん》" },
+  { title: "味噌汁《みそしる》の具《ぐ》" }
+];
 
-type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'kimochi' | 'yesno' | 'saikin' | 'profile';
+type GameMode = 'menu' | 'quiz' | 'moshimo' | 'theme' | 'kimochi' | 'yesno' | 'saikin' | 'profile' | 'teiban';
 type Selection = 'A' | 'B' | null;
 
 const App: React.FC = () => {
@@ -500,6 +521,7 @@ const App: React.FC = () => {
   const [kimochiTopic, setKimochiTopic] = useState<ThemeTopic | null>(null);
   const [yesnoTopic, setYesnoTopic] = useState<ThemeTopic | null>(null);
   const [saikinTopic, setSaikinTopic] = useState<ThemeTopic | null>(null);
+  const [teibanTopic, setTeibanTopic] = useState<ThemeTopic | null>(null);
   const [selectedYesNoOption, setSelectedYesNoOption] = useState<'YES' | 'NO' | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -513,6 +535,7 @@ const App: React.FC = () => {
     setKimochiTopic(null);
     setYesnoTopic(null);
     setSaikinTopic(null);
+    setTeibanTopic(null);
     setSelectedYesNoOption(null);
     setIsListModalOpen(false);
     setError(null);
@@ -546,6 +569,7 @@ const App: React.FC = () => {
       case 'kimochi': return kimochiTopicList;
       case 'yesno': return yesNoTopicList;
       case 'saikin': return saikinTopicList;
+      case 'teiban': return teibanTopicList;
       default: return null;
     }
   };
@@ -557,6 +581,7 @@ const App: React.FC = () => {
     if (mode === 'kimochi') setKimochiTopic(item);
     if (mode === 'yesno') setYesnoTopic(item);
     if (mode === 'saikin') setSaikinTopic(item);
+    if (mode === 'teiban') setTeibanTopic(item);
   };
 
   const handleNext = () => {
@@ -584,12 +609,13 @@ const App: React.FC = () => {
   };
 
   const menuItems = [
-    { mode: 'quiz', icon: "🅰️", title: "究極《きゅうきょく》の二択《にたく》", desc: "一生《いっしょう》に一《いち》度《ど》の決断《けつだん》？！", color: "rose", bg: "bg-rose-50/50", border: "border-rose-100", text: "text-rose-500", iconBg: "bg-rose-50" },
-    { mode: 'moshimo', icon: "💭", title: "もしもトーク", desc: "想像《そうぞう》力《りょく》を全開《ぜんかい》に！", color: "amber", bg: "bg-amber-50/50", border: "border-amber-100", text: "text-amber-500", iconBg: "bg-amber-50" },
-    { mode: 'theme', icon: "🗣️", title: "テーマトーク", desc: "みんなでワイワイ話《はな》そう！", color: "orange", bg: "bg-orange-50/50", border: "border-orange-100", text: "text-orange-500", iconBg: "bg-orange-50" },
-    { mode: 'saikin', icon: "📰", title: "最近《さいきん》ニュース", desc: "身《み》の回《まわ》りの出来事《できごと》を話《はな》そう！", color: "blue", bg: "bg-blue-50/50", border: "border-blue-100", text: "text-blue-500", iconBg: "bg-blue-50" },
-    { mode: 'kimochi', icon: "💚", title: "今《いま》のきもち", desc: "心《こころ》の声《こえ》を聴《き》いてみよう", color: "emerald", bg: "bg-emerald-50/50", border: "border-emerald-100", text: "text-emerald-500", iconBg: "bg-emerald-50" },
-    { mode: 'yesno', icon: "🙆‍♀️", title: "YES / NO", desc: "迷《まよ》わず直感《ちょっかん》で答《こた》えよう！", color: "violet", bg: "bg-violet-50/50", border: "border-violet-100", text: "text-violet-500", iconBg: "bg-violet-50" },
+    { mode: 'quiz', icon: "🅰️", title: "究極《きゅうきょく》の二択《にたく》", desc: "一生《いっしょう》に一《いち》度《ど》の決断《けつだん》？！", color: "rose", bg: "bg-rose-50/50", border: "border-rose-100", hoverBorder: "hover:border-rose-300", hoverShadow: "hover:shadow-rose-100/50", text: "text-rose-500", iconBg: "bg-rose-50" },
+    { mode: 'moshimo', icon: "💭", title: "もしもトーク", desc: "想像《そうぞう》力《りょく》を全開《ぜんかい》に！", color: "amber", bg: "bg-amber-50/50", border: "border-amber-100", hoverBorder: "hover:border-amber-300", hoverShadow: "hover:shadow-amber-100/50", text: "text-amber-500", iconBg: "bg-amber-50" },
+    { mode: 'theme', icon: "🗣️", title: "テーマトーク", desc: "みんなでワイワイ話《はな》そう！", color: "orange", bg: "bg-orange-50/50", border: "border-orange-100", hoverBorder: "hover:border-orange-300", hoverShadow: "hover:shadow-orange-100/50", text: "text-orange-500", iconBg: "bg-orange-50" },
+    { mode: 'saikin', icon: "📰", title: "最近《さいきん》ニュース", desc: "身《み》の回《まわ》りの出来事《できごと》を話《はな》そう！", color: "blue", bg: "bg-blue-50/50", border: "border-blue-100", hoverBorder: "hover:border-blue-300", hoverShadow: "hover:shadow-blue-100/50", text: "text-blue-500", iconBg: "bg-blue-50" },
+    { mode: 'teiban', icon: "🎯", title: "定番《ていばん》の◯◯", desc: "あなたにとっての「定番《ていばん》」を語《かた》ろう！", color: "cyan", bg: "bg-cyan-50/50", border: "border-cyan-100", hoverBorder: "hover:border-cyan-300", hoverShadow: "hover:shadow-cyan-100/50", text: "text-cyan-500", iconBg: "bg-cyan-50" },
+    { mode: 'kimochi', icon: "💚", title: "今《いま》のきもち", desc: "心《こころ》の声《こえ》を聴《き》いてみよう", color: "emerald", bg: "bg-emerald-50/50", border: "border-emerald-100", hoverBorder: "hover:border-emerald-300", hoverShadow: "hover:shadow-emerald-100/50", text: "text-emerald-500", iconBg: "bg-emerald-50" },
+    { mode: 'yesno', icon: "🙆‍♀️", title: "YES / NO", desc: "迷《まよ》わず直感《ちょっかん》で答《こた》えよう！", color: "violet", bg: "bg-violet-50/50", border: "border-violet-100", hoverBorder: "hover:border-violet-300", hoverShadow: "hover:shadow-violet-100/50", text: "text-violet-500", iconBg: "bg-violet-50" },
   ];
 
   const renderMenu = () => (
@@ -598,19 +624,19 @@ const App: React.FC = () => {
         <button
           key={item.mode}
           onClick={() => handleModeSelect(item.mode as GameMode)}
-          className={`group bg-white p-8 rounded-[2rem] border-2 ${item.border} hover:border-${item.color}-300 shadow-sm hover:shadow-xl hover:shadow-${item.color}-100/50 transition-all duration-300 text-left flex items-center gap-8 relative overflow-hidden active:scale-[0.98]`}
+          className={`group bg-white p-6 md:p-8 rounded-[2rem] border-2 ${item.border} ${item.hoverBorder} shadow-sm hover:shadow-xl ${item.hoverShadow} transition-all duration-300 text-left flex items-center gap-6 md:gap-8 relative overflow-hidden active:scale-[0.98]`}
         >
           <div className={`absolute top-0 right-0 w-32 h-32 ${item.bg} rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700 opacity-60`} />
           
-          <div className={`flex-shrink-0 w-20 h-20 flex items-center justify-center rounded-[1.5rem] ${item.iconBg} text-4xl shadow-inner group-hover:scale-110 transition-transform relative z-10`}>
+          <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-[1.5rem] ${item.iconBg} text-3xl md:text-4xl shadow-inner group-hover:scale-110 transition-transform relative z-10`}>
             {item.icon}
           </div>
           
           <div className="relative z-10">
-            <h2 className={`text-2xl font-black ${item.text} mb-2`}>
+            <h2 className={`text-xl md:text-2xl font-black ${item.text} mb-1.5 md:mb-2`}>
               {parseRuby(item.title, showRuby)}
             </h2>
-            <p className="text-stone-400 text-sm font-bold leading-relaxed">
+            <p className="text-stone-500 text-xs md:text-sm font-bold leading-relaxed">
               {parseRuby(item.desc, showRuby)}
             </p>
           </div>
@@ -620,17 +646,17 @@ const App: React.FC = () => {
   );
 
   const renderControls = (colorClass: string, shadowColor: string) => (
-    <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 mt-10 md:mt-12">
       <button 
         onClick={handleNext} 
-        className={`${colorClass} text-white py-5 px-14 rounded-full font-black text-xl shadow-lg ${shadowColor} hover:opacity-90 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md transition-all flex items-center gap-3`}
+        className={`${colorClass} text-white py-4 px-10 rounded-full font-black text-lg md:text-xl shadow-lg ${shadowColor} hover:opacity-95 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all flex items-center gap-3 active:scale-[0.98] duration-200`}
       >
         <span>🔄</span>
         {parseRuby("つぎのお題《だい》", showRuby)}
       </button>
       <button 
         onClick={() => setIsListModalOpen(true)} 
-        className="bg-white text-stone-500 py-5 px-12 rounded-full font-black text-lg border-2 border-stone-100 hover:border-stone-200 hover:bg-stone-50 transition-all active:scale-95 flex items-center gap-3"
+        className="bg-white/90 backdrop-blur-sm text-stone-600 hover:text-stone-800 py-4 px-8 rounded-full font-black text-base md:text-lg border border-stone-200 hover:border-stone-300 hover:bg-stone-50 transition-all active:scale-[0.98] flex items-center gap-3 shadow-sm duration-200"
       >
         <span>📋</span>
         {parseRuby("リストから選《えら》ぶ", showRuby)}
@@ -643,28 +669,28 @@ const App: React.FC = () => {
     const combinedQuizText = `${stripRuby(quiz.theme)}\n🅰️ ${stripRuby(quiz.optionA)}\n🅱️ ${stripRuby(quiz.optionB)}`;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-xl border-4 border-rose-50 mb-10 relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-80 h-80 bg-rose-50 rounded-full -mr-40 -mt-40 opacity-30 pointer-events-none" />
-           <h2 className="text-2xl md:text-4xl font-black text-stone-700 leading-tight mb-14 relative z-10">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-10 md:p-12 lg:p-14 shadow-xl shadow-rose-100/20 border border-rose-100/60 mb-8 md:mb-10 relative overflow-hidden backdrop-blur-sm">
+           <div className="absolute top-0 right-0 w-80 h-80 bg-rose-50/40 rounded-full -mr-40 -mt-40 opacity-30 pointer-events-none" />
+           <h2 className="text-xl md:text-3xl lg:text-4xl font-black text-stone-800 leading-snug mb-10 md:mb-12 relative z-10 px-2 md:px-4">
              {parseRuby(quiz.theme, showRuby)}
            </h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative z-10">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10 relative z-10">
              <button 
                onClick={() => setSelectedOption('A')}
-               className={`group p-10 rounded-[2.5rem] border-4 transition-all duration-300 ${selectedOption === 'A' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl scale-[1.02]' : 'bg-rose-50/30 hover:bg-rose-50 text-stone-700 border-transparent hover:border-rose-100'}`}
+               className={`group p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 relative overflow-hidden active:scale-[0.99] ${selectedOption === 'A' ? 'bg-rose-500 text-white border-rose-400 shadow-xl shadow-rose-200/50 scale-[1.01]' : 'bg-rose-50/20 hover:bg-rose-50/60 text-stone-700 border-stone-100 hover:border-rose-200'}`}
              >
-               <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🅰️</div>
-               <div className="font-black text-2xl leading-relaxed">{parseRuby(quiz.optionA, showRuby)}</div>
+               <div className="text-4xl md:text-5xl mb-4 md:mb-5 group-hover:scale-110 transition-transform">🅰️</div>
+               <div className="font-extrabold text-lg md:text-xl leading-relaxed">{parseRuby(quiz.optionA, showRuby)}</div>
              </button>
              <button 
                onClick={() => setSelectedOption('B')}
-               className={`group p-10 rounded-[2.5rem] border-4 transition-all duration-300 ${selectedOption === 'B' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl scale-[1.02]' : 'bg-rose-50/30 hover:bg-rose-50 text-stone-700 border-transparent hover:border-rose-100'}`}
+               className={`group p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 relative overflow-hidden active:scale-[0.99] ${selectedOption === 'B' ? 'bg-rose-500 text-white border-rose-400 shadow-xl shadow-rose-200/50 scale-[1.01]' : 'bg-rose-50/20 hover:bg-rose-50/60 text-stone-700 border-stone-100 hover:border-rose-200'}`}
              >
-               <div className="text-6xl mb-6 group-hover:scale-110 transition-transform">🅱️</div>
-               <div className="font-black text-2xl leading-relaxed">{parseRuby(quiz.optionB, showRuby)}</div>
+               <div className="text-4xl md:text-5xl mb-4 md:mb-5 group-hover:scale-110 transition-transform">🅱️</div>
+               <div className="font-extrabold text-lg md:text-xl leading-relaxed">{parseRuby(quiz.optionB, showRuby)}</div>
              </button>
            </div>
-           <div className="flex justify-center mt-4">
+           <div className="flex justify-center mt-2">
              <CopyButton textToCopy={combinedQuizText} />
            </div>
         </div>
@@ -682,12 +708,14 @@ const App: React.FC = () => {
     if (!moshimoTopic) return null;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-amber-50 mb-10 relative overflow-hidden">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-10 md:p-12 lg:p-14 shadow-xl shadow-amber-100/20 border border-amber-100/60 mb-8 md:mb-10 relative overflow-hidden backdrop-blur-sm">
           <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-amber-200 to-amber-400" />
-          <span className="inline-block bg-amber-50 text-amber-700 px-6 py-2 rounded-full text-lg font-black mb-10 border border-amber-100 shadow-sm">
-             ✨ {parseRuby(moshimoTopic.theme, showRuby)}
-          </span>
-          <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14">
+          <div className="mb-6 md:mb-8">
+            <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-5 py-1.5 rounded-full text-xs md:text-sm font-black border border-amber-100/80 shadow-sm select-none">
+              ✨ {parseRuby(moshimoTopic.theme, showRuby)}
+            </span>
+          </div>
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12 px-2 md:px-4">
             {parseRuby(moshimoTopic.title, showRuby)}
           </h2>
           <div className="flex justify-center">
@@ -708,10 +736,10 @@ const App: React.FC = () => {
     if (!themeTopic) return null;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-orange-50 mb-10 relative group">
-           <div className="text-9xl text-orange-50 absolute -top-10 -left-4 transform -rotate-12 select-none font-black opacity-50 group-hover:rotate-0 transition-transform duration-700">“</div>
-           <div className="text-9xl text-orange-50 absolute -bottom-10 -right-4 transform rotate-[168deg] select-none font-black opacity-50 group-hover:rotate-180 transition-transform duration-700">”</div>
-           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-12 md:p-12 lg:p-14 shadow-xl shadow-orange-100/20 border border-orange-100/60 mb-8 md:mb-10 relative group overflow-hidden backdrop-blur-sm">
+           <div className="text-8xl md:text-9xl text-orange-100/20 absolute top-2 left-4 md:top-4 md:left-6 transform -rotate-6 select-none font-black opacity-60 group-hover:rotate-0 transition-transform duration-700 pointer-events-none">“</div>
+           <div className="text-8xl md:text-9xl text-orange-100/20 absolute bottom-2 right-4 md:bottom-4 md:right-6 transform rotate-[174deg] select-none font-black opacity-60 group-hover:rotate-180 transition-transform duration-700 pointer-events-none">”</div>
+           <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12 relative z-10 px-4 md:px-8">
              {parseRuby(themeTopic.title, showRuby)}
            </h2>
            <div className="flex justify-center relative z-10">
@@ -732,10 +760,10 @@ const App: React.FC = () => {
     if (!saikinTopic) return null;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-blue-50 mb-10 relative group">
-           <div className="text-9xl text-blue-50 absolute -top-10 -left-4 transform -rotate-12 select-none font-black opacity-50 group-hover:rotate-0 transition-transform duration-700">“</div>
-           <div className="text-9xl text-blue-50 absolute -bottom-10 -right-4 transform rotate-[168deg] select-none font-black opacity-50 group-hover:rotate-180 transition-transform duration-700">”</div>
-           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-12 md:p-12 lg:p-14 shadow-xl shadow-blue-100/20 border border-blue-100/60 mb-8 md:mb-10 relative group overflow-hidden backdrop-blur-sm">
+           <div className="text-8xl md:text-9xl text-blue-100/20 absolute top-2 left-4 md:top-4 md:left-6 transform -rotate-6 select-none font-black opacity-60 group-hover:rotate-0 transition-transform duration-700 pointer-events-none">“</div>
+           <div className="text-8xl md:text-9xl text-blue-100/20 absolute bottom-2 right-4 md:bottom-4 md:right-6 transform rotate-[174deg] select-none font-black opacity-60 group-hover:rotate-180 transition-transform duration-700 pointer-events-none">”</div>
+           <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12 relative z-10 px-4 md:px-8">
              {parseRuby(saikinTopic.title, showRuby)}
            </h2>
            <div className="flex justify-center relative z-10">
@@ -752,13 +780,37 @@ const App: React.FC = () => {
     );
   };
 
+  const renderTeiban = () => {
+    if (!teibanTopic) return null;
+    return (
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-12 md:p-12 lg:p-14 shadow-xl shadow-cyan-100/20 border border-cyan-100/60 mb-8 md:mb-10 relative group overflow-hidden backdrop-blur-sm">
+           <div className="text-8xl md:text-9xl text-cyan-100/20 absolute top-2 left-4 md:top-4 md:left-6 transform -rotate-6 select-none font-black opacity-60 group-hover:rotate-0 transition-transform duration-700 pointer-events-none">“</div>
+           <div className="text-8xl md:text-9xl text-cyan-100/20 absolute bottom-2 right-4 md:bottom-4 md:right-6 transform rotate-[174deg] select-none font-black opacity-60 group-hover:rotate-180 transition-transform duration-700 pointer-events-none">”</div>
+           <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12 relative z-10 px-4 md:px-8">
+             {parseRuby(teibanTopic.title, showRuby)}
+           </h2>
+           <div className="flex justify-center relative z-10">
+             <CopyButton textToCopy={`定番の${stripRuby(teibanTopic.title)}`} />
+           </div>
+        </div>
+        {renderControls('bg-cyan-500', 'shadow-cyan-200')}
+        <TopicSelectorModal 
+          isOpen={isListModalOpen} onClose={() => setIsListModalOpen(false)}
+          title="お題を選《えら》ぶ" items={teibanTopicList} onSelect={handleManualSelect}
+          displayKey="title" colorClass="bg-cyan-500" showRuby={showRuby}
+        />
+      </div>
+    );
+  };
+
   const renderKimochi = () => {
     if (!kimochiTopic) return null;
     return (
       <div className="max-w-4xl mx-auto px-4 text-center">
-        <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-emerald-50 mb-10 relative group overflow-hidden">
-           <div className="absolute top-10 right-10 text-8xl opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-1000 pointer-events-none">🌿</div>
-           <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14 relative z-10 px-4">
+        <div className="bg-white/95 rounded-[2.5rem] p-6 py-12 md:p-12 lg:p-14 shadow-xl shadow-emerald-100/20 border border-emerald-100/60 mb-8 md:mb-10 relative group overflow-hidden backdrop-blur-sm">
+           <div className="absolute top-6 right-6 md:top-10 md:right-10 text-6xl md:text-8xl opacity-15 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-1000 pointer-events-none select-none">🌿</div>
+           <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12 relative z-10 px-4 md:px-8">
              {parseRuby(kimochiTopic.title, showRuby)}
            </h2>
            <div className="flex justify-center relative z-10">
@@ -779,20 +831,20 @@ const App: React.FC = () => {
     if (!yesnoTopic) return null;
     return (
         <div className="max-w-4xl mx-auto px-4 text-center">
-            <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-xl border-4 border-violet-50 mb-10 relative overflow-hidden">
-                <h2 className="text-3xl md:text-5xl font-black text-stone-700 leading-[1.4] mb-14">
+            <div className="bg-white/95 rounded-[2.5rem] p-6 py-12 md:p-12 lg:p-14 shadow-xl shadow-violet-100/20 border border-violet-100/60 mb-8 md:mb-10 relative overflow-hidden backdrop-blur-sm">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-black text-stone-800 leading-snug md:leading-snug mb-10 md:mb-12">
                   {parseRuby(yesnoTopic.title, showRuby)}
                 </h2>
-                <div className="flex justify-center gap-8 mb-12">
+                <div className="flex justify-center gap-4 md:gap-8 mb-8 md:mb-10">
                   <button 
                     onClick={() => setSelectedYesNoOption('YES')}
-                    className={`w-40 py-12 rounded-[2.5rem] text-5xl font-black border-4 transition-all duration-300 hover:scale-105 active:scale-95 ${selectedYesNoOption === 'YES' ? 'bg-violet-500 text-white border-violet-200 shadow-2xl' : 'bg-white border-violet-50 text-violet-400 hover:border-violet-100 hover:bg-violet-50'}`}
+                    className={`w-32 md:w-44 py-6 md:py-8 rounded-2xl text-3xl md:text-4xl font-black border-2 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${selectedYesNoOption === 'YES' ? 'bg-violet-500 text-white border-violet-400 shadow-xl shadow-violet-200/50' : 'bg-violet-50/10 border-stone-100 text-violet-500 hover:border-violet-200 hover:bg-violet-50/60'}`}
                   >
                     YES
                   </button>
                   <button 
                     onClick={() => setSelectedYesNoOption('NO')}
-                    className={`w-40 py-12 rounded-[2.5rem] text-5xl font-black border-4 transition-all duration-300 hover:scale-105 active:scale-95 ${selectedYesNoOption === 'NO' ? 'bg-rose-500 text-white border-rose-200 shadow-2xl' : 'bg-white border-rose-50 text-rose-400 hover:border-rose-100 hover:bg-rose-50'}`}
+                    className={`w-32 md:w-44 py-6 md:py-8 rounded-2xl text-3xl md:text-4xl font-black border-2 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${selectedYesNoOption === 'NO' ? 'bg-rose-500 text-white border-rose-400 shadow-xl shadow-rose-200/50' : 'bg-rose-50/10 border-stone-100 text-rose-500 hover:border-rose-200 hover:bg-rose-50/60'}`}
                   >
                     NO
                   </button>
@@ -820,6 +872,7 @@ const App: React.FC = () => {
           gameMode === 'moshimo' ? 'もしもトーク' :
           gameMode === 'theme' ? 'テーマトーク' :
           gameMode === 'saikin' ? '最近《さいきん》ニュース' :
+          gameMode === 'teiban' ? '定番《ていばん》の◯◯' :
           gameMode === 'kimochi' ? '今《いま》のきもち' :
           gameMode === 'yesno' ? 'YES / NO' : ''
         }
@@ -842,6 +895,7 @@ const App: React.FC = () => {
               {gameMode === 'moshimo' && renderMoshimo()}
               {gameMode === 'theme' && renderTheme()}
               {gameMode === 'saikin' && renderSaikin()}
+              {gameMode === 'teiban' && renderTeiban()}
               {gameMode === 'kimochi' && renderKimochi()}
               {gameMode === 'yesno' && renderYesNo()}
             </div>

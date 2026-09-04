@@ -44,6 +44,26 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #e9dcb3;
       }
+      
+      /* Premium Ruby Typography */
+      ruby {
+        ruby-position: over;
+        ruby-align: center;
+        margin: 0 0.05em;
+      }
+      rt {
+        font-size: 0.55em;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #78716c; /* stone-500 */
+        user-select: none;
+        padding-bottom: 0.2em;
+      }
+      /* Smooth global select */
+      ::selection {
+        background-color: #ffedd5; /* orange-100 */
+        color: #ea580c; /* orange-600 */
+      }
     </style></head>
   <body class="text-stone-700 font-medium">
     <div id="root"></div>

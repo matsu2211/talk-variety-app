@@ -23,10 +23,10 @@ const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy }) => {
   return (
     <button
       onClick={handleCopy}
-      className={`text-base font-bold py-3 px-8 rounded-2xl border-2 transition-all duration-300 active:scale-95 flex items-center gap-2 ${
+      className={`text-sm md:text-base font-bold py-3 px-6 md:px-8 rounded-2xl border-2 transition-all duration-300 active:scale-95 flex items-center gap-2 ${
         isCopied
-          ? 'bg-emerald-50 border-emerald-200 text-emerald-600 shadow-inner'
-          : 'bg-white border-orange-100 text-orange-400 hover:border-orange-200 hover:text-orange-500 hover:shadow-md'
+          ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-100'
+          : 'bg-white border-stone-200/80 text-stone-500 hover:border-stone-300 hover:text-stone-700 hover:bg-stone-50 hover:shadow-sm'
       }`}
       disabled={isCopied}
     >
